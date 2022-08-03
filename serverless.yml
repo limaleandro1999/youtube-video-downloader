@@ -1,0 +1,66 @@
+service: youtube-video-downloader
+frameworkVersion: '2 || 3'
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: '20201221'
+  region: sa-east-1
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+          Resource:
+            - "*"
+
+functions:
+  downloader:
+    handler: downloader.handler
+    environment:
+      VIDEOS_BUCKET_NAME:
+        Ref: VideosBucket
+    events:
+      - httpApi:
+          path: /download
+          method: post
+    
+resources:
+  Resources:
+    VideosBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        CorsConfiguration:
+          CorsRules:
+            -
+              AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+  Outputs:
+    VideosBucketName:
+      Value:
+        Ref: VideosBucket
+
+custom:
+  serverlessPluginTypescript:
+    tsConfigFileLocation: './tsconfig.json'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
