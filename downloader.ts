@@ -18,24 +18,18 @@ export async function handler(event: APIGatewayEvent): Promise<APIGatewayProxyRe
             Body: videoStream
         }).promise();
 
-        return {
-            statusCode: 200,
-            headers: {
-              "Content-Type": "application/json"  
-            },
-            body: JSON.stringify({
-                url: result.Location
-            })
-        };
+        return getResponseObject(200, { url: result.Location });
     } catch (error: any) {
-        return {
-            statusCode: 500,
-            headers: {
-                "Content-Type": "application/json"  
-            },
-            body: JSON.stringify({
-                error: error.message
-            })
-        };  
+        return getResponseObject(500, { error: error.message });
     }
+}
+
+function getResponseObject(statusCode: number, body: any) {
+    return {
+        statusCode,
+        headers: {
+            "Content-Type": "application/json"  
+        },
+        body: JSON.stringify(body)
+    }; 
 }
