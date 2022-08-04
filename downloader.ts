@@ -14,7 +14,7 @@ export async function handler(event: APIGatewayEvent): Promise<APIGatewayProxyRe
 
         const result = await s3Client.upload({
             Bucket: process.env.VIDEOS_BUCKET_NAME!,
-            Key: `${videoInfo.videoDetails.title}-${Date.now()}.mp4`,
+            Key: `videos/${videoInfo.videoDetails.title}-${Date.now()}.mp4`,
             Body: videoStream
         }).promise();
 

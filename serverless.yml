@@ -17,7 +17,7 @@ provider:
             - s3:PutObject
             - s3:GetObject
           Resource:
-            - "*"
+            - '*'
 
 functions:
   downloader:
@@ -36,6 +36,11 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         AccessControl: PublicRead
+        LifecycleConfiguration:
+          Rules:
+            - Status: Enabled
+              ExpirationInDays: 1
+              Prefix: 'videos/'
     
     VideosBucketAllowPublicReadPolicy:
       Type: AWS::S3::BucketPolicy
@@ -43,17 +48,17 @@ resources:
         Bucket: 
           Ref: VideosBucket
         PolicyDocument:
-          Version: "2012-10-17"
+          Version: '2012-10-17'
           Statement: 
             - Effect: Allow
               Action: 
-                - "s3:GetObject"
+                - 's3:GetObject'
               Resource:
                 Fn::Join:
                   - '/'
                   - - !GetAtt VideosBucket.Arn
                     - '*'
-              Principal: "*"
+              Principal: '*'
 
 custom:
   serverlessPluginTypescript:
