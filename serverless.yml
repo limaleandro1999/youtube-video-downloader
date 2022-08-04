@@ -36,25 +36,24 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         AccessControl: PublicRead
-        CorsConfiguration:
-          CorsRules:
-            -
-              AllowedOrigins:
-                - '*'
-              AllowedHeaders:
-                - '*'
-              AllowedMethods:
-                - GET
-                - PUT
-                - POST
-                - DELETE
-                - HEAD
-              MaxAge: 3000
-
-  Outputs:
-    VideosBucketName:
-      Value:
-        Ref: VideosBucket
+    
+    VideosBucketAllowPublicReadPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: 
+          Ref: VideosBucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement: 
+            - Effect: Allow
+              Action: 
+                - "s3:GetObject"
+              Resource:
+                Fn::Join:
+                  - '/'
+                  - - !GetAtt VideosBucket.Arn
+                    - '*'
+              Principal: "*"
 
 custom:
   serverlessPluginTypescript:
