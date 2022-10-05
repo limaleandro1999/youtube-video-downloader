@@ -1,5 +1,5 @@
 service: youtube-video-downloader
-frameworkVersion: '2 || 3'
+frameworkVersion: '3'
 
 useDotenv: true
 
@@ -67,4 +67,4 @@ custom:
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
-
+  
